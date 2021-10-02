@@ -10,7 +10,10 @@
         <panes>
           <TitledPane animated="false" text="untitled 1">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="68.0" layoutY="47.0" mnemonicParsing="false" onAction="#abrirVentana" text="Abrir ventana 2" />
+                     </children></AnchorPane>
             </content>
           </TitledPane>
           <TitledPane animated="false" text="untitled 2">
