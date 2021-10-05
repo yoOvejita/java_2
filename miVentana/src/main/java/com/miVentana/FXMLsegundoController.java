@@ -5,13 +5,17 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 public class FXMLsegundoController {
-	final String nom = "";
-	final String pass = "";
+	final String mensaje = "Bienvenido ";
+	public String nombre = "";
 	@FXML
 	private Label lblMensaje;
 	
 	@FXML
 	private void mostrarMensaje(ActionEvent event) {
-		lblMensaje.setText("Bienvenidos a la segunda ventana.");
+		lblMensaje.setText(mensaje + nombre);
+	}
+	
+	public void setNombre(String txt) {
+		nombre = txt;
 	}
 }

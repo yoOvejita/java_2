@@ -4,9 +4,9 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="300" maxWidth="300" minHeight="300" minWidth="300" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.miVentana.FXMLsegundoController">
+<AnchorPane maxHeight="300" maxWidth="300" minHeight="167.0" minWidth="272.0" prefHeight="167.0" prefWidth="272.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.miVentana.FXMLsegundoController">
    <children>
-      <Label fx:id="lblMensaje" layoutX="143.0" layoutY="79.0" prefHeight="17.0" prefWidth="14.0" />
-      <Button layoutX="119.0" layoutY="160.0" mnemonicParsing="false" onAction="#mostrarMensaje" text="Dame click" />
+      <Label fx:id="lblMensaje" layoutX="9.0" layoutY="51.0" prefHeight="17.0" prefWidth="251.0" />
+      <Button layoutX="99.0" layoutY="108.0" mnemonicParsing="false" onAction="#mostrarMensaje" text="Dame click" />
    </children>
 </AnchorPane>

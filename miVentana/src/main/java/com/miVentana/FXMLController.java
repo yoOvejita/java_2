@@ -5,9 +5,16 @@ Put header here
 
  */
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import com.miVentana.Modelo.Empleado;
@@ -16,6 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
@@ -25,7 +33,11 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Region;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import org.apache.commons.io.FileUtils;
 
 public class FXMLController implements Initializable {
     
@@ -146,9 +158,14 @@ public class FXMLController implements Initializable {
 	}
     @FXML
     private void abrirVentana(ActionEvent event) {
-    	try {
+    	/*try {
     		Stage escenario = new Stage();
-			Scene escena = new Scene(loadFXML("segundo"));//Crear el archivo
+    		FXMLLoader loader = loadFXML("segundo");
+    		Region raiz = (Region) loader.load();
+    		FXMLsegundoController contro = loader.<FXMLsegundoController>getController();
+    		//contro.nombre = "Pepe";
+    		contro.setNombre("Pepito");
+			Scene escena = new Scene(raiz);//Crear el archivo
 			escenario.setScene(escena);
 			escenario.setTitle("Segunda ventana");
 			escenario.show();
@@ -156,11 +173,69 @@ public class FXMLController implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
+    	Node nodo = (Node) event.getSource();
+    	Stage escenario = (Stage) nodo.getScene().getWindow();
+    	FileChooser fileChooser = new FileChooser();
+    	fileChooser.setTitle("Elija una imagen");
+    	fileChooser.getExtensionFilters().addAll(
+    			new FileChooser.ExtensionFilter("JPG","*.jpg"),
+    			new FileChooser.ExtensionFilter("PNG","*.png"),
+    			new FileChooser.ExtensionFilter("Todititos","*.*")
+    			);
+    	File archivo = fileChooser.showOpenDialog(escenario);
+    	if(archivo != null) {
+    		System.out.println("Archivo cargado con éxito");
+    		System.out.println("#########Usando FileUtils:");
+    		try {
+				List<String> lineas = FileUtils.readLines(archivo);
+				for(String linea : lineas)
+					System.out.println(linea);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		System.out.println("#########Usando Reader:");
+    		try {
+				Reader reader = new BufferedReader(
+					new InputStreamReader(
+						new FileInputStream(archivo)
+					)
+				);
+				if(reader.ready()) {
+					char[] letras = new char[120];
+					reader.read(letras);
+					System.out.println(letras);
+				}
+				reader.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		
+    		System.out.println("#########Usando BufferedReader:");
+    		try {
+				FileInputStream fis = new FileInputStream(archivo);
+				BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+				String linea;
+				while((linea = br.readLine()) != null) {
+					System.out.println(linea);
+				}
+				fis.close();
+				br.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				
+			}
+    		
+    	}
     }
     
-    private static Parent loadFXML(String fxml) throws IOException {
+    private static FXMLLoader loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("/fxml/"+fxml + ".fxml"));
-        return fxmlLoader.load();
+        return fxmlLoader;
     }
 
 	@Override
