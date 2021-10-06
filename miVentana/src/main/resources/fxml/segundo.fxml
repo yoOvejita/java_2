@@ -4,9 +4,11 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="300" maxWidth="300" minHeight="167.0" minWidth="272.0" prefHeight="167.0" prefWidth="272.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.miVentana.FXMLsegundoController">
+<AnchorPane maxHeight="300" maxWidth="300" minHeight="167.0" minWidth="272.0" prefHeight="237.0" prefWidth="272.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.miVentana.FXMLsegundoController">
    <children>
       <Label fx:id="lblMensaje" layoutX="9.0" layoutY="51.0" prefHeight="17.0" prefWidth="251.0" />
       <Button layoutX="99.0" layoutY="108.0" mnemonicParsing="false" onAction="#mostrarMensaje" text="Dame click" />
+      <Button layoutX="143.0" layoutY="187.0" mnemonicParsing="false" onAction="#guardarArchivo" text="Guardar en archivo" />
+      <TextField fx:id="txtContenido" layoutX="14.0" layoutY="154.0" prefHeight="25.0" prefWidth="242.0" />
    </children>
 </AnchorPane>

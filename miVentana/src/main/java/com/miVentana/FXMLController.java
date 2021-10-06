@@ -158,7 +158,7 @@ public class FXMLController implements Initializable {
 	}
     @FXML
     private void abrirVentana(ActionEvent event) {
-    	/*try {
+    	try {
     		Stage escenario = new Stage();
     		FXMLLoader loader = loadFXML("segundo");
     		Region raiz = (Region) loader.load();
@@ -173,7 +173,9 @@ public class FXMLController implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		*/
+		
+    	
+    	/*
     	Node nodo = (Node) event.getSource();
     	Stage escenario = (Stage) nodo.getScene().getWindow();
     	FileChooser fileChooser = new FileChooser();
@@ -206,6 +208,10 @@ public class FXMLController implements Initializable {
 					char[] letras = new char[120];
 					reader.read(letras);
 					System.out.println(letras);
+					String mensaje ="";
+					for(char ch : letras){
+						mensaje += ch;
+					}
 				}
 				reader.close();
 			} catch (IOException e) {
@@ -231,6 +237,7 @@ public class FXMLController implements Initializable {
 			}
     		
     	}
+    	*/
     }
     
     private static FXMLLoader loadFXML(String fxml) throws IOException {
