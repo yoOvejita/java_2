@@ -10,6 +10,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.miVentana.Modelo.Persona;
 
@@ -24,6 +31,8 @@ import javafx.stage.Stage;
 public class FXMLsegundoController {
 	final String mensaje = "Bienvenido ";
 	public String nombre = "";
+	Connection con = null;
+	
 	@FXML
 	private Label lblMensaje;
 	
@@ -89,6 +98,67 @@ public class FXMLsegundoController {
 			per.hablar();
 			System.out.println(valorLeido);
 		} catch (IOException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	private void interactuarConDDBB(ActionEvent event) {
+		
+		try {
+			//Creará la base de datos miDDBB.db si no existe; caso contrario, se conecta
+			String url = "jdbc:sqlite:C:/Users/rusok/Desktop/miDDBB.db";
+			con = DriverManager.getConnection(url);
+			DatabaseMetaData meta = con.getMetaData();
+			System.out.println("Conexion exitosa usando: " + meta.getDriverName());
+			
+			/*
+			Statement st = con.createStatement();
+			st.execute("CREATE TABLE persona ("
+					+ "id integer PRIMARY KEY,"
+					+ "nombre text NOT NULL,"
+					+ "peso double NOT NULL,"
+					+ "edad integer NOT NULL);");
+			*/
+			//Insert
+			
+			/*
+			String sql = "INSERT INTO persona (id,nombre,peso,edad) VALUES(?,?,?,?)";
+	        PreparedStatement ps = con.prepareStatement(sql);
+	        ps.setInt(1, 32);
+	        ps.setString(2, "Pepe");
+	        ps.setDouble(3, 62.5);
+	        ps.setInt(4, 40);
+	        ps.executeUpdate();
+	        System.out.println("Insertado con éxito");*/
+			
+			/*String sql2 = "SELECT * FROM persona";
+			Statement st2 = con.createStatement();
+			ResultSet rs = st2.executeQuery(sql2);
+			
+			while(rs.next()) {
+				System.out.println(rs.getString("nombre") + ": " +
+						rs.getInt("edad"));
+				Persona ppp = new Persona(rs.getString("nombre"),
+						rs.getDouble("edad"), rs.getInt("edad"));
+				ppp.hablar();
+			}*/
+			
+			String sql3 = "SELECT nombre, edad, peso FROM persona WHERE id > ?";
+			PreparedStatement st2 = con.prepareStatement(sql3);
+			st2.setInt(1, 55);//Ejemplo, id > 55
+			ResultSet rs = st2.executeQuery();
+			
+			while(rs.next()) {
+				System.out.println(rs.getString("nombre") + ": " +
+						rs.getInt("edad"));
+				Persona ppp = new Persona(rs.getString("nombre"),
+						rs.getDouble("peso"), rs.getInt("edad"));
+				ppp.hablar();
+			}
+			
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
