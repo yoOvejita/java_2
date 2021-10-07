@@ -147,7 +147,7 @@ public class FXMLsegundoController {
 			
 			String sql3 = "SELECT nombre, edad, peso FROM persona WHERE id > ?";
 			PreparedStatement st2 = con.prepareStatement(sql3);
-			st2.setInt(1, 55);//Ejemplo, id > 55
+			st2.setInt(1, 4);//Ejemplo, id > 4
 			ResultSet rs = st2.executeQuery();
 			
 			while(rs.next()) {
