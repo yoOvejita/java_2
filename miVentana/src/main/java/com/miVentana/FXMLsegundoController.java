@@ -124,14 +124,15 @@ public class FXMLsegundoController {
 			//Insert
 			
 			/*
-			String sql = "INSERT INTO persona (id,nombre,peso,edad) VALUES(?,?,?,?)";
+			String sql = "INSERT INTO persona (nombre,peso,edad) VALUES(?,?,?)";
 	        PreparedStatement ps = con.prepareStatement(sql);
-	        ps.setInt(1, 32);
-	        ps.setString(2, "Pepe");
-	        ps.setDouble(3, 62.5);
-	        ps.setInt(4, 40);
+	        //ps.setInt(1, 32);
+	        ps.setString(1, "Sofia");
+	        ps.setDouble(2, 57.5);
+	        ps.setInt(3, 21);
 	        ps.executeUpdate();
-	        System.out.println("Insertado con éxito");*/
+	        System.out.println("Insertado con éxito");
+			*/
 			
 			/*String sql2 = "SELECT * FROM persona";
 			Statement st2 = con.createStatement();
@@ -145,9 +146,17 @@ public class FXMLsegundoController {
 				ppp.hablar();
 			}*/
 			
+			//Modificar un registro
+			//actualizar(32, "Pepe", 50.0, 20);
+			
+			//Elimina registro por id
+			//borrar(32);
+			
+			crearTablas();
+			
 			String sql3 = "SELECT nombre, edad, peso FROM persona WHERE id > ?";
 			PreparedStatement st2 = con.prepareStatement(sql3);
-			st2.setInt(1, 4);//Ejemplo, id > 4
+			st2.setInt(1, -1);//Ejemplo, id > 4
 			ResultSet rs = st2.executeQuery();
 			
 			while(rs.next()) {
@@ -159,8 +168,16 @@ public class FXMLsegundoController {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
+		}finally {
+			try {
+				if(con != null)
+					con.close();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 	
@@ -190,4 +207,97 @@ public class FXMLsegundoController {
 	public void setNombre(String txt) {
 		nombre = txt;
 	}
+	
+	private void actualizar(int id, String nombre, double peso, int edad) {
+        String sql = "UPDATE persona SET nombre = ? , "
+                + "peso = ? , "
+                + "edad = ? "
+                + "WHERE id = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, nombre);
+            ps.setDouble(2, peso);
+            ps.setInt(3, edad);
+            ps.setInt(4, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+	public void borrar(int id) {
+        String sql = "DELETE FROM persona WHERE id = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+	private void crearTablas() {
+		String sql = "CREATE TABLE IF NOT EXISTS materia (\r\n"
+				+ "	id integer PRIMARY KEY,\r\n"
+				+ "	nombre text NOT NULL\r\n"
+				+ ");\r\n"
+				+ "\r\n"
+				+ "CREATE TABLE IF NOT EXISTS cursado (\r\n"
+				+ "	id integer\r\n"
+				+ "        persona_id integer,\r\n"
+				+ "	materia_id integer,\r\n"
+				+ "	nota real,\r\n"
+				+ "	PRIMARY KEY (id),\r\n"
+				+ "	FOREIGN KEY (persona_id) REFERENCES persona (id),\r\n"
+				+ "	FOREIGN KEY (materia_id) REFERENCES materia (id)\r\n"
+				+ ");";
+		Statement st;
+		try {
+			st = con.createStatement();
+			st.execute(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	public void agregarCursado(String sigla, int personaId, double nota) {
+        String sqlMateria = "INSERT INTO materia(nombre) VALUES(?)";
+        String sqlCursado = "INSERT INTO cursado(persona_id,materia_id,nota) VALUES(?,?,?)";
+        ResultSet rs = null;
+        PreparedStatement psMateria = null, psCursado = null;
+        try {
+            con.setAutoCommit(false);//Para evitar el envío automático
+            psMateria = con.prepareStatement(sqlMateria, Statement.RETURN_GENERATED_KEYS);
+            psMateria.setString(1, sigla);
+            int filasAfectadas = psMateria.executeUpdate();
+            rs = psMateria.getGeneratedKeys();
+            int materiaId = 0;
+            if (rs.next())
+            	materiaId = rs.getInt(1);
+            if (filasAfectadas != 1)
+            	con.rollback();//ponemos la conexion en su estado inicial
+            psCursado = con.prepareStatement(sqlCursado);
+            psCursado.setInt(1, personaId);
+            psCursado.setInt(2, materiaId);
+            psCursado.setDouble(3, nota);
+            psCursado.executeUpdate();
+            con.commit();
+        } catch (SQLException e1) {
+            try {
+                if (con != null) con.rollback();
+            } catch (SQLException e2) {
+                System.out.println(e2.getMessage());
+            }
+            System.out.println(e1.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (psMateria != null) psMateria.close();
+                if (psCursado != null) psCursado.close();
+                if (con != null) con.close();
+            } catch (SQLException e3) {
+                System.out.println(e3.getMessage());
+            }
+        }
+    }
 }
